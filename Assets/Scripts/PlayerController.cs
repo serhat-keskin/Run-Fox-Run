@@ -2,13 +2,14 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
+    public Transform groundCheck;
+    public LayerMask groundLayer;
     private Rigidbody2D rb;
-    private float moveX;
+    private bool isGrounded;
     private void Start() { rb = GetComponent<Rigidbody2D>(); }
     private void Update() { 
-        moveX = Input.GetAxis("Horizontal"); 
-        if (Input.GetButtonDown("Jump")) Jump();
+        isGrounded = Physics2D.Raycast(groundCheck.position, Vector2.down, 0.1f, groundLayer);
+        if (Input.GetButtonDown("Jump") && isGrounded) Jump();
     }
-    private void FixedUpdate() { rb.velocity = new Vector2(moveX * moveSpeed, rb.velocity.y); }
     private void Jump() { rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); }
 }
